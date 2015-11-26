@@ -310,14 +310,14 @@
 </script>
 
 <div id="title">
-  <h2>Actual Continuous Integration Status</h2>
+  <h2>TaxModel ICT - Continuous Integration Status</h2>
 </div>
 
 <div id="projectsContainer">
 </div>
 
 
-<div id="pushMessagesContainer">
+<div style="display: none;" id="pushMessagesContainer">
     <h2>Pushes to GitHub</h2>
     <div class="items"></div>
 </div>
