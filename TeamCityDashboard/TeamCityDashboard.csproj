@@ -163,6 +163,7 @@
       <DebugInfo>False</DebugInfo>
     </Content>
     <None Include="packages.config" />
+    <None Include="Web.example.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\Segoe UI Bold.ttf" />

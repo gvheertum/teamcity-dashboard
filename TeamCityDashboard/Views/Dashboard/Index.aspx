@@ -49,7 +49,8 @@
     var lastStr = '';
 
     function loadData(layout) {
-        $.getJSON("data").done(function (data) {
+    	$.getJSON("data").done(function (data)
+	    {
             var str = JSON.stringify(data);
             if (str == lastStr) return; // nothing changed
             lastStr = str;
@@ -60,6 +61,8 @@
                 var name = project.Name;
                 var id = project.Id;
                 var lastBuildDate = project.LastBuildDate.substr(6, 13);
+	            var numberOfTests = project.Statistics.AmountOfUnitTests;
+	            var coverage = project.Statistics.CodeCoveragePercentage;
 
                 var $oldItem = $('#' + id);
                 if ($oldItem.length > 0 && $oldItem.attr('data-last-builddate') == lastBuildDate)
@@ -127,8 +130,9 @@
                     if (uniqueBreakers.length > 0)
                         $a.prepend($breakers);
                 }
-                else {
-                    $a.addClass('successful')
+                else
+                {
+	                $a.addClass('successful');
                     $container.append('<p class=large>' + name + '</p>');
 
                     if (project.CoverageGraph != null && project.CoverageGraph.length > 0) {
@@ -185,12 +189,21 @@
 
                     }
 
-                    //append last build information to item box
-                    var buildDate = new Date(parseInt(lastBuildDate));
-                    $container.append('<p class="small last-build-date"><span title="' + buildDate.toISOString() + '">' + buildDate.toISOString() + '</span></p>');
-                }
+                   
+				}
+				
+            	//append last build information to item box
+                var buildDate = new Date(parseInt(lastBuildDate));
+                $container.append('<p class="small last-build-date"><span title="' + buildDate.toISOString() + '">' + buildDate.toISOString() + '</span></p>');
 
-                //add or re-add element
+                $container.append('<p class="x-small last-build-time"><span>Build Time: </span><span title="' + project.Statistics.TotalBuildTimeSeconds + '">' + project.Statistics.TotalBuildTimeSeconds + 's</span></p>');
+            	//append number of unit tests
+                $container.append('<p class="x-small last-build-tests"><span>Nr of Tests: </span><span title="' + numberOfTests + '">' + numberOfTests + '</span></p>');
+            	//append code coverage
+                $container.append('<p class="x-small last-build-coverage"><span>Statement coverage: </span><span>' + project.Statistics.AmountOfStatementsCovered + "/" + project.Statistics.AmountOfStatements + " (" + (coverage + '').substr(0, 4) + '%)</span></p>');
+
+              
+            	//add or re-add element
                 if ($oldItem.length == 1) {
                     $oldItem.fadeOut(400, function () {
                         if (masonryInitialized) {
@@ -216,7 +229,8 @@
                     //now activate the timeago ticker
                     $a.find('.last-build-date span').timeago();
 
-                    $a.width(120);
+                    $a.width(250);
+
                     var overflows = $a.find('.item-text .details p')[0].scrollWidth > $a.find('.item-text .details p')[0].clientWidth;
                     var hasStatistics = $a.find('.item-text .statistics-container').length;
                     var hasChart = $a.find('.extra-text .chart').length;
@@ -227,6 +241,8 @@
                     }
                 }
             });
+
+            $(".last-refresh-date").text(new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"));
 
             layout();
         });
@@ -315,7 +331,9 @@
 
 <div id="projectsContainer">
 </div>
-
+<div id="clock">
+	<span>Last refresh: </span><span class="last-refresh-date"></span>
+</div>
 
 <div style="display: none;" id="pushMessagesContainer">
     <h2>Pushes to GitHub</h2>

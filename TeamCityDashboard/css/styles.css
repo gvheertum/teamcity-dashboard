@@ -57,6 +57,13 @@ h4,
   font-weight: normal;
   line-height: 15pt; }
 
+p.x-small {
+  font-family: Arial, Segoe UI, Sans-Serif;
+  font-size: 9pt;
+  font-weight: normal;
+  line-height: 2pt;
+}
+
 #title {
   margin: 20px 0 10px 100px; }
 
@@ -71,18 +78,24 @@ h4,
   #pushMessagesContainer .item {
     margin-right: 10px; }
 
+#clock {
+    position: absolute;
+    bottom: 5px;
+	right:5px;
+}
+
 .item {
   float: left;
   margin-bottom: 10px;
   width: 250px;
   /*default width; we try to make them 120 with JS*/
-  min-height: 120px;
+  min-height: 130px;
   overflow: hidden; }
   .item.event {
     background-color: rgba(6, 82, 196, 0.8); }
   .item.successful {
     background-color: #363;
-    height: 120px; }
+    height: 130px; }
   .item.failing {
     background: #822; }
   .item .item-images {
@@ -107,11 +120,11 @@ h4,
     display: block;
     padding: 10px 10px 5px 10px;
     box-sizing: border-box;
-    height: 120px;
+    height: 130px;
     overflow: hidden; }
     .item .item-text .details {
       float: left;
-      width: 145px; }
+      width: 250px; }
       .item .item-text .details .small {
         line-height: 14pt;
         margin: 5px 0; }

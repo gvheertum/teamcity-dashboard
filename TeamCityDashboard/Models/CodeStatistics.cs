@@ -15,5 +15,8 @@ namespace TeamCityDashboard.Models
     public double CommentLinesPercentage { get; set; }
     public int CommentLines { get; set; }
     public int AmountOfUnitTests { get; set; }
+	public int TotalBuildTimeSeconds { get; set; }
+	public int AmountOfStatements { get; set; }
+	public int AmountOfStatementsCovered { get; set; }
   }
 }

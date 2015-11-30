@@ -37,6 +37,8 @@ namespace TeamCityDashboard.Services
 		/// </summary>
 		private const string URL_BUILD_DETAILS = @"/httpAuth/app/rest/buildTypes/id:{0}";
 
+		private const string URL_BUILD_STATISTICS = @"/httpAuth/app/rest/builds/id:{0}/statistics";
+
 		/// <summary>
 		/// url to retrieve the changes commited in the given {0} buildrunId
 		/// </summary>
@@ -159,13 +161,14 @@ namespace TeamCityDashboard.Services
 
 			DateTime? currentBuildDate = null;
 			bool currentBuildSuccesfull = true;
+			int currentBuildID = 0;
 			List<string> buildBreakerEmailaddress = new List<string>();
 
 			if (lastBuild != null)
 			{
 				XmlDocument lastBuildDoc = GetPageContents(lastBuild.GetAttribute("href"));
 				currentBuildSuccesfull = lastBuild.GetAttribute("status") == "SUCCESS";//we default to true
-
+				currentBuildID = int.Parse(lastBuild.GetAttribute("id"));
 				string buildDate = null;
 				DateTime theDate;
 				//try to parse last date
@@ -210,6 +213,7 @@ namespace TeamCityDashboard.Services
 				Name = name,
 				Url = new Uri(string.Format("{0}/viewType.html?buildTypeId={1}&tab=buildTypeStatusDiv", BaseUrl, id)).ToString(),
 				CurrentBuildIsSuccesfull = currentBuildSuccesfull,
+				CurrentBuildID = currentBuildID,
 				CurrentBuildDate = currentBuildDate,
 				PossibleBuildBreakerEmailAddresses = buildBreakerEmailaddress
 			};
@@ -261,6 +265,44 @@ namespace TeamCityDashboard.Services
 		private string GetUserEmailAddress(string userId)
 		{
 			return GetContents(string.Format(URL_USER_EMAILADDRESS, userId));
+		}
+
+		public ICodeStatistics GetBuildStatistics(int id)
+		{
+			XmlDocument buildStats = GetPageContents(string.Format(URL_BUILD_STATISTICS, id));
+
+			XmlNodeList propertyNodes = buildStats.SelectNodes("properties")[0].ChildNodes;
+			Func<XmlNodeList, string, string> getValueByName = (nodes, name) =>
+			{
+				foreach (XmlElement el in nodes)
+				{
+					if (el.GetAttribute("name").ToLower() == name.ToLower())
+					{
+						return el.GetAttribute("value");
+					}
+				}
+				return null;
+			};
+		
+			return new CodeStatistics()
+			{
+				CodeCoveragePercentage = ParseDoubleOrDefault(getValueByName(propertyNodes, "CodeCoverageS")),
+                AmountOfUnitTests = ParseIntOrDefault(getValueByName(propertyNodes, "TotalTestCount")),
+				TotalBuildTimeSeconds = ParseIntOrDefault(getValueByName(propertyNodes, "BuildDurationNetTime")) / 1000, //Convert to seconds
+				AmountOfStatements = ParseIntOrDefault(getValueByName(propertyNodes, "CodeCoverageAbsSTotal")),
+				AmountOfStatementsCovered = ParseIntOrDefault(getValueByName(propertyNodes, "CodeCoverageAbsSCovered")),
+
+			};
+		}
+
+		private int ParseIntOrDefault(string value)
+		{
+			return string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value);
+		}
+
+		private double ParseDoubleOrDefault(string value)
+		{
+			return string.IsNullOrWhiteSpace(value) ? 0d : double.Parse(value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture);
 		}
 	}
 }

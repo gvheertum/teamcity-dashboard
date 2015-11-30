@@ -12,6 +12,7 @@ namespace TeamCityDashboard.Interfaces
     string Url { get; }
     DateTime? CurrentBuildDate { get; }
     bool CurrentBuildIsSuccesfull { get; }
+	int CurrentBuildID { get; }
     IEnumerable<string> PossibleBuildBreakerEmailAddresses { get; }
   }
 }

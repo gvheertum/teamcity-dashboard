@@ -76,6 +76,14 @@ h4,
   line-height: 15pt;
 }
 
+p.x-small
+{
+  font-family: Arial, Segoe UI, Sans-Serif;
+  font-size: 9pt;
+  font-weight: normal;
+  line-height: 2pt;
+}
+
 #title
 {
 	margin: 20px 0 10px 100px;
@@ -100,13 +108,18 @@ h4,
   }
 }
 
+#clock {
+    position: absolute;
+    bottom: 5px;
+	right:5px;
+}
 
 .item
 {
   float: left;
   margin-bottom: 10px;
   width: 250px; /*default width; we try to make them 120 with JS*/
-  min-height: 120px;
+  min-height: 130px;
   overflow: hidden;
 
   &.event
@@ -117,7 +130,7 @@ h4,
   &.successful
   {
     background-color: #363;
-    height: 120px;
+    height: 130px;
   }
 
   &.failing
@@ -160,13 +173,13 @@ h4,
     display: block;
     padding: 10px 10px 5px 10px;
     box-sizing: border-box;
-    height: 120px;
+    height: 130px;
     overflow:hidden;
 
     .details
     {
       float:left;
-      width:145px;
+      width:250px;
 
       .small
       {

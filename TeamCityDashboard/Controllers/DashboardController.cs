@@ -95,7 +95,7 @@ namespace TeamCityDashboard.Controllers
                                          Url = proj.Url,
                                          LastBuildDate = proj.LastBuildDate,
                                          IconUrl = proj.IconUrl,
-                                         Statistics = string.IsNullOrWhiteSpace(proj.SonarProjectKey) ? (ICodeStatistics)null : SonarDataService.GetProjectStatistics(proj.SonarProjectKey),
+                                         Statistics = !proj.BuildConfigs.Any(T => T.CurrentBuildIsSuccesfull) ? null : TeamCityDataService.GetBuildStatistics(proj.BuildConfigs.First(T => T.CurrentBuildIsSuccesfull).CurrentBuildID),
                                          CoverageGraph = string.IsNullOrWhiteSpace(proj.SonarProjectKey) ? null : getProjectGraph(proj.SonarProjectKey)
                                        };
 
