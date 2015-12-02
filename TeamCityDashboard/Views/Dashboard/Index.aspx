@@ -61,9 +61,7 @@
                 var name = project.Name;
                 var id = project.Id;
                 var lastBuildDate = project.LastBuildDate.substr(6, 13);
-	            var numberOfTests = project.Statistics.AmountOfUnitTests;
-	            var coverage = project.Statistics.CodeCoveragePercentage;
-
+	
                 var $oldItem = $('#' + id);
                 if ($oldItem.length > 0 && $oldItem.attr('data-last-builddate') == lastBuildDate)
                     return;//skip this one, its the same
@@ -195,14 +193,16 @@
             	//append last build information to item box
                 var buildDate = new Date(parseInt(lastBuildDate));
                 $container.append('<p class="small last-build-date"><span title="' + buildDate.toISOString() + '">' + buildDate.toISOString() + '</span></p>');
-
-                $container.append('<p class="x-small last-build-time"><span>Build Time: </span><span title="' + project.Statistics.TotalBuildTimeSeconds + '">' + project.Statistics.TotalBuildTimeSeconds + 's</span></p>');
-            	//append number of unit tests
-                $container.append('<p class="x-small last-build-tests"><span>Nr of Tests: </span><span title="' + numberOfTests + '">' + numberOfTests + '</span></p>');
-            	//append code coverage
-                $container.append('<p class="x-small last-build-coverage"><span>Statement coverage: </span><span>' + project.Statistics.AmountOfStatementsCovered + "/" + project.Statistics.AmountOfStatements + " (" + (coverage + '').substr(0, 4) + '%)</span></p>');
-
-              
+ 
+                if (project.Statistics)
+                {
+                	$container.append('<p class="x-small last-build-time"><span>Build Time: </span><span title="' + project.Statistics.TotalBuildTimeSeconds + '">' + project.Statistics.TotalBuildTimeSeconds + 's</span></p>');
+                	//append number of unit tests
+                	$container.append('<p class="x-small last-build-tests"><span>Nr of Tests: </span><span title="' + project.Statistics.AmountOfUnitTests + '">' + project.Statistics.AmountOfUnitTests + '</span></p>');
+                	//append code coverage
+                	$container.append('<p class="x-small last-build-coverage"><span>Statement coverage: </span><span>' + project.Statistics.AmountOfStatementsCovered + "/" + project.Statistics.AmountOfStatements + " (" + (project.Statistics.CodeCoveragePercentage + '').substr(0, 4) + '%)</span></p>');
+                }
+                
             	//add or re-add element
                 if ($oldItem.length == 1) {
                     $oldItem.fadeOut(400, function () {
@@ -242,10 +242,18 @@
                 }
             });
 
-            $(".last-refresh-date").text(new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"));
-
+		  
             layout();
         });
+
+    	var dateString = new Date().toLocaleTimeString('nl-NL', {
+    		hour12: false,
+    		hour: "numeric",
+    		minute: "numeric"
+    	});
+
+    	$(".last-refresh-date").text(dateString.toString());
+
 
         //after initial callback to layout() we provide a stub function because masonry will be initialized
         window.setTimeout(loadData.bind(this, function () { }), 10 * 1000);
@@ -332,7 +340,7 @@
 <div id="projectsContainer">
 </div>
 <div id="clock">
-	<span>Last refresh: </span><span class="last-refresh-date"></span>
+	<span class="last-refresh-date x-large"></span>
 </div>
 
 <div style="display: none;" id="pushMessagesContainer">

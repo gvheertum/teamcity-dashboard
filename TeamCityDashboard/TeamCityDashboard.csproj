@@ -156,7 +156,14 @@
       <DebugInfo>False</DebugInfo>
     </Content>
     <None Include="packages.config" />
+    <Content Include="Web.Config" />
+    <None Include="Web.Debug.Config">
+      <DependentUpon>Web.Config</DependentUpon>
+    </None>
     <None Include="Web.example.config" />
+    <None Include="Web.Release.Config">
+      <DependentUpon>Web.Config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\Segoe UI Bold.ttf" />
