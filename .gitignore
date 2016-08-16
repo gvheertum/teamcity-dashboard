@@ -12,3 +12,7 @@ packages/*
 web.config
 *.Publish.xml
 *.ncrunchsolution
+/.vs/config/applicationhost.config
+/TeamCityDashboard/Web.Release.Config
+/TeamCityDashboard/Web.Debug.Config
+/TeamCityDashboard/new  54.txt
